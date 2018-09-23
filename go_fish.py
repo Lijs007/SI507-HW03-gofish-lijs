@@ -149,8 +149,8 @@ class Hand:
 	def ask_for_valid_request(self):
 		request_not_valid = True
 		while request_not_valid:
-			rank_requested = int(input("Please choose a card rank you would like to ask the other player if they have (between 1-13): "))
-			#rank_requested = random.randint(1,13)
+			#rank_requested = int(input("Please choose a card rank you would like to ask the other player if they have (between 1-13): "))
+			rank_requested = random.randint(1,13)
 			for card in self.cards:
 				if card.rank_num == rank_requested:
 					request_not_valid = False
@@ -192,6 +192,51 @@ class Hand:
 
 		return book_flag
 
+def play(player_id, player_num, deck, players):
+	print("Player" + str(player_id + 1) + "'s turn:")
+	player1 = players[player_id]
+
+	another_player_id = random.randint(0, player_num - 1) # pick another player randomly
+	while(another_player_id == player_id):
+		another_player_id = random.randint(0, player_num - 1)
+	player2 = players[another_player_id]
+
+	player1.show_cards()
+	if len(player1.cards) != 0:
+		rank_requested = player1.ask_for_valid_request()
+		fish_flag = True
+		range1 = len(player2.cards)
+		i = 0
+		j = 0
+		while i < range1:
+			if player2.cards[i].rank_num == rank_requested:
+				j+=1
+				player1.add_card(player2.cards[i])
+				player2.cards.pop(i)
+				player_flag = 2
+				fish_flag = False
+				range1-=1
+			else:
+				i+=1
+		if fish_flag:
+			print("Go fish!")
+			card_fish = deck.pop_card()
+			player1.add_card(card_fish)
+			print("Player"+ str(player_id + 1) + " draws " + str(card_fish))
+			if card_fish.rank_num == rank_requested:
+				print("It's still player" + str(player_id + 1) + "'s turn.")
+				return 1
+			else:
+				return 0
+		else:
+			print("Player"+ str(player_id + 1) + " gets " + str(j) + " cards with rank " + str(rank_requested))
+			return 0
+	else:
+		draw_card = deck.pop_card()
+		player1.cards.append(draw_card)
+		print("Player1 has no card in hand.")
+		print("Player1 draws " + str(draw_card) + " from the deck.")
+		return 0
 
 
 				
@@ -209,92 +254,20 @@ player1 = Hand(hands_init[0])
 player2 = Hand(hands_init[1])
 
 num_of_books = 0
-player_flag = 1
+player_id = 0
+players=[player1,player2]
 
 print("Game Start")
 print("==========")
 while num_of_books < 13:
-	if player_flag == 1:
-			
-		print("Player1's turn:")
 
-		player1.show_cards()
-		if len(player1.cards) != 0:
-			rank_requested = player1.ask_for_valid_request()
-			fish_flag = True
-			range1 = len(player2.cards)
-			i = 0
-			while i < range1:
-				if player2.cards[i].rank_num == rank_requested:
-					player1.add_card(player2.cards[i])
-					player2.cards.pop(i)
-					player_flag = 2
-					fish_flag = False
-					range1-=1
-				else:
-					i+=1
-
-			if fish_flag:
-				print("Go fish!")
-				card_fish = deck.pop_card()
-				player1.add_card(card_fish)
-				print("Player1 get " + str(card_fish))
-				if card_fish.rank_num == rank_requested:
-					print("It's still player1's turn.")
-				else:
-					player_flag = 2
-
-			if player1.remove_books():
-				num_of_books+=1
-
-		else:
-			draw_card = deck.pop_card()
-			player1.cards.append(draw_card)
-			print("Player1 has no card in hand.")
-			print("Player1 draws " + str(draw_card) + " from the deck.")
-			player_flag = 2
-
-
-	elif player_flag == 2:
-		if len(player2.cards) != 0:
-			print("Player2's turn:")
-			player2.show_cards()
-			rank_requested = player2.ask_for_valid_request()
-			fish_flag = True
-			range2 = len(player1.cards)
-			i = 0
-			while i < range2:
-				if player1.cards[i].rank_num == rank_requested:
-					player2.add_card(player1.cards[i])
-					player1.cards.pop(i)
-					player_flag = 1
-					fish_flag = False
-					range2-=1
-				else:
-					i+=1
-
-			if fish_flag:
-				print("Go fish!")
-				card_fish = deck.pop_card()
-				player2.add_card(card_fish)
-				print("Player2 get " + str(card_fish))
-				if card_fish.rank_num == rank_requested:
-					print("It's still player2's turn.")
-					player_flag = 2
-				else:
-					player_flag = 1
-
-			if player2.remove_books():
-				num_of_books+=1
-
-		else:
-			draw_card = deck.pop_card()
-			player2.cards.append(draw_card)
-			print("Player2 has no card in hand.")
-			print("Player2 draws " + str(draw_card) + " from the deck.")
-			player_flag = 1
-
-	
+	if (play(player_id, 2, deck, players)):
+		if players[player_id].remove_books():
+			num_of_books+=1
+	else:
+		if players[player_id].remove_books():
+			num_of_books+=1
+		player_id = (player_id + 1) % 2
 
 	print("==============")
 	print("Player1 has books of: ")
@@ -311,7 +284,6 @@ if len(player1.books) > len(player2.books):
 	print("Player1 wins!")
 else:
 	print("Player2 wins!")
-
 
 
 
