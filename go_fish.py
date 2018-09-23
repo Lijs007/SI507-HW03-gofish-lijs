@@ -249,7 +249,7 @@ def play(player_id, player_num, deck, players):
 				
 
 #main
-player_num = int(input("How many computer players do you want? "))
+player_num = int(input("How many computer players do you want? (2-4) "))
 deck = Deck()
 deck.shuffle()
 # players = []
@@ -258,14 +258,14 @@ deck.shuffle()
 # 	players.append(hand)
 # 	for j in range(7):
 # 		players[i].draw(deck)
-players = deck.deal(player_num, 7)
+players = deck.deal(player_num, 7) #change to deal
 num_of_books = 0
 player_id = 0
 
 print("Game Start")
 print("==========")
 while num_of_books < 13:
-	if len(deck.cards) == 0:
+	if len(deck.cards) == 0 and player_num != 2:
 		break
 	if (play(player_id, player_num, deck, players)):
 		if players[player_id].remove_books():
@@ -289,7 +289,7 @@ for i in range(player_num):
 		book_max = len(players[i].books)
 print("==============")
 
-for i in range(player_num):
+for i in range(player_num): #possible for mulfiplayers to win
 	if book_max == len (players[i].books):
 		print("Player" + str(i + 1) + " wins")
 
