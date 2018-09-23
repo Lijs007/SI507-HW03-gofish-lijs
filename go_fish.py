@@ -252,12 +252,13 @@ def play(player_id, player_num, deck, players):
 player_num = int(input("How many computer players do you want? "))
 deck = Deck()
 deck.shuffle()
-players = []
-for i in range(player_num):
-	hand = Hand([])
-	players.append(hand)
-	for j in range(7):
-		players[i].draw(deck)
+# players = []
+# for i in range(player_num):
+# 	hand = Hand([])
+# 	players.append(hand)
+# 	for j in range(7):
+# 		players[i].draw(deck)
+players = deck.deal(player_num, 7)
 num_of_books = 0
 player_id = 0
 
