@@ -149,8 +149,8 @@ class Hand:
 	def ask_for_valid_request(self):
 		request_not_valid = True
 		while request_not_valid:
-			rank_requested = int(input("Please choose a card rank you would like to ask the other player if they have (between 1-13): "))
-			#rank_requested = random.randint(1,13)
+			#rank_requested = int(input("Please choose a card rank you would like to ask the other player if they have (between 1-13): "))
+			rank_requested = random.randint(1,13)
 			for card in self.cards:
 				if card.rank_num == rank_requested:
 					request_not_valid = False
@@ -213,7 +213,6 @@ def play(player_id, player_num, deck, players):
 				j+=1
 				player1.add_card(player2.cards[i])
 				player2.cards.pop(i)
-				player_flag = 2
 				fish_flag = False
 				range1-=1
 			else:
@@ -242,48 +241,48 @@ def play(player_id, player_num, deck, players):
 				
 
 #main
+player_num = int(input("How many computer players do you want? "))
 deck = Deck()
 deck.shuffle()
-hands_init = [[],[]]
-
-for i in range(2):
+players = []
+for i in range(player_num):
+	hand = Hand([])
+	players.append(hand)
 	for j in range(7):
-		hands_init[i].append(deck.pop_card())
-
-player1 = Hand(hands_init[0])
-player2 = Hand(hands_init[1])
-
+		players[i].draw(deck)
 num_of_books = 0
 player_id = 0
-players=[player1,player2]
 
 print("Game Start")
 print("==========")
 while num_of_books < 13:
-
-	if (play(player_id, 2, deck, players)):
+	if len(deck.cards) == 0:
+		break
+	if (play(player_id, player_num, deck, players)):
 		if players[player_id].remove_books():
 			num_of_books+=1
 	else:
 		if players[player_id].remove_books():
 			num_of_books+=1
-		player_id = (player_id + 1) % 2
+		player_id = (player_id + 1) % player_num
 
 	print("==============")
-	print("Player1 has books of: ")
-	print(player1.books)
-	print("Player2 has books of: ")
-	print(player2.books)
+	for i in range(player_num):
+		print("Player" + str(i + 1) + " has books of: ")
+		print(players[i].books)
 	print("==============")
 
 
-print("==========")
-print("Player1 has " + str(len(player1.books)) + " books.")
-print("Player2 has " + str(len(player2.books)) + " books.")
-if len(player1.books) > len(player2.books):
-	print("Player1 wins!")
-else:
-	print("Player2 wins!")
+print("==============")
+book_max = 0
+for i in range(player_num):
+	if book_max < len(players[i].books):
+		book_max = len(players[i].books)
+print("==============")
+
+for i in range(player_num):
+	if book_max == len (players[i].books):
+		print("Player" + str(i + 1) + " wins")
 
 
 
