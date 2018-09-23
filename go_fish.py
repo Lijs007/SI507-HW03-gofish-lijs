@@ -150,7 +150,7 @@ class Hand:
 		request_not_valid = True
 		while request_not_valid:
 			#rank_requested = int(input("Please choose a card rank you would like to ask the other player if they have (between 1-13): "))
-			rank_requested = random.randint(1,13)
+			rank_requested = self.random_request()
 			for card in self.cards:
 				if card.rank_num == rank_requested:
 					request_not_valid = False
@@ -159,6 +159,14 @@ class Hand:
 				print("Invalid Request!")
 				print("You must choose a card rank you have!")
 		return rank_requested
+
+
+	def random_request(self):
+		rank_list = []
+		for card in  self.cards:
+			if card.rank_num not in rank_list:
+				rank_list.append(card.rank_num)
+		return rank_list[random.randint(0,len(rank_list) - 1)]
 
 	def show_cards(self):
 		print("You currently have: ")
