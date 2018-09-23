@@ -242,11 +242,12 @@ def play(player_id, player_num, deck, players):
 				
 
 #main
+player_num = int(input("How many computer players do you want?"))
 deck = Deck()
 deck.shuffle()
 hands_init = [[],[]]
 
-for i in range(2):
+for i in range(player_num):
 	for j in range(7):
 		hands_init[i].append(deck.pop_card())
 
@@ -261,7 +262,7 @@ print("Game Start")
 print("==========")
 while num_of_books < 13:
 
-	if (play(player_id, 2, deck, players)):
+	if (play(player_id, player_num, deck, players)):
 		if players[player_id].remove_books():
 			num_of_books+=1
 	else:
