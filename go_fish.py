@@ -149,8 +149,8 @@ class Hand:
 	def ask_for_valid_request(self):
 		request_not_valid = True
 		while request_not_valid:
-			#rank_requested = int(input("Please choose a card rank you would like to ask the other player if they have (between 1-13): "))
-			rank_requested = random.randint(1,13)
+			rank_requested = int(input("Please choose a card rank you would like to ask the other player if they have (between 1-13): "))
+			#rank_requested = random.randint(1,13)
 			for card in self.cards:
 				if card.rank_num == rank_requested:
 					request_not_valid = False
